@@ -48,7 +48,7 @@ function Header() {
   }
   return (
     <div className='p-3 shadow-sm flex justify-between items-center px-5'>
-        <img src='/logo.svg'></img>
+        <img className='h-[60px] w-[120px] md:h-[80px] md:w-[150px] mr-[50px] md:mr-0'src='/Logonew.webp'></img>
         <div>
           {users?
           <div className='flex items-center gap-3'>
