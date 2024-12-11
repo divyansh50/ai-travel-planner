@@ -29,6 +29,7 @@ function CreateTrip() {
   const [formData,setFormData]= useState([]);
   const [openDialog, setOpenDialog]=useState(false);
   const [loading,setLoading]= useState(false);
+  const [formDataFilled,setFormDataFilled]=useState(false);
 
   const navigate = useNavigate();
 
@@ -40,7 +41,17 @@ function CreateTrip() {
   }
 
   useEffect(()=>{
-    console.log(formData)
+    console.log("***Form Data***",formData);
+    if(formData.length === 0){
+      setFormDataFilled(true);
+    }
+    
+    else{
+    if(!formData?.location || !formData?.numberOfDays || !formData?.budget || !formData?.traveller){
+      setFormDataFilled(true);
+    }}
+    setFormDataFilled(false);
+    // console.log(formDataFilled);
   },[formData])
 
   const login = useGoogleLogin({
@@ -64,15 +75,16 @@ function CreateTrip() {
   const  generateTrip= async()=>{
 
     const user = localStorage.getItem('user');
-    if(!user){
-      setOpenDialog(true);
-      return;
-    }
+    
     if(!formData?.location || !formData.numberOfDays || !formData.budget || !formData.traveller){
       toast("Please Fill all the details")
     }
     if(formData?.numberOfDays>5){
       toast("Days should be less than 5")
+    }
+    if(!user){
+      setOpenDialog(true);
+      return;
     }
     setLoading(true);
     
@@ -85,7 +97,7 @@ function CreateTrip() {
     // console.log("Final Prompt", FINAL_PROMPT);
 
     const result = await chatSession.sendMessage(FINAL_PROMPT);
-    console.log(result?.response?.text());
+    // console.log(result?.response?.text());
     setLoading(false);
     saveAiTrip(result?.response?.text());//save to db firebase
     
@@ -108,11 +120,11 @@ function CreateTrip() {
   }
   
   return (
-    <div className='sm:px-10 md:px-32 lg:px-56 xl:px-72 px-5 mt-10'>
-      <h2 className='font-bold text-3xl'>Tell us your travel preferences 🚇🧳</h2>
+    <div className='sm:px-12 md:px-32 lg:px-56 xl:px-72 px-5 mt-10'>
+      <h2 className='font-bold text-3xl flex'>Tell us your travel preferences 🚇🧳</h2>
       <p className='mt-3 text-gray-500 text-xl'>Just provide some basic information, and our trip planner will generate a customized itinerary based on your preferences.</p>
 
-      <div className='mt-20 flex flex-col gap-9'>
+      <div className='mt-10 md:mt-15 flex flex-col gap-9'>
         <div>
           <h2 className='text-xl my-3 font-medium'>What is your destination of choice?</h2>
           <GooglePlacesAutocomplete apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
@@ -148,7 +160,7 @@ function CreateTrip() {
           {SelectTravelesList.map((item,index)=>(
             <div key={index}
             onClick={()=>handleInputChange('traveller',item.people)} 
-            className={`p-4 border cursor-pointer rounded-lg hover:shadow-lg ${formData?.traveller == item.people&& 'shadow-lg border-black'}`}>
+            className={`p-4 pr-2 border cursor-pointer rounded-lg hover:shadow-lg ${formData?.traveller == item.people&& 'shadow-lg border-black'}`}>
               <h2 className='text-4xl'>{item.icon}</h2>
               <h2 className='font-bold text-lg'>{item.title}</h2>
               <h2 className='text-sm text-gray-500'>{item.desc}</h2>
@@ -157,9 +169,15 @@ function CreateTrip() {
           </div>
         </div>
 
-        <div className='my-10 justify-end flex'>
-          <Button onClick = {generateTrip} disabled={loading}>
-          {loading?<AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' />:'Generate Trip'}
+        <div className='my-10 justify-center md:justify-end flex'>
+          <Button onClick = {generateTrip} disabled={loading || formDataFilled} className='w-full md:w-auto'>
+          {loading?
+          <div>
+            {formDataFilled?'Generate Trip'
+            :<div><AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' />
+            </div>}
+          </div>
+          :'Generate Trip'}
           </Button>
         </div>
         
