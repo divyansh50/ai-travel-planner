@@ -44,11 +44,13 @@ function CreateTrip() {
     console.log("***Form Data***",formData);
     if(formData.length === 0){
       setFormDataFilled(true);
+      return;
     }
     
     else{
     if(!formData?.location || !formData?.numberOfDays || !formData?.budget || !formData?.traveller){
       setFormDataFilled(true);
+      return;
     }}
     setFormDataFilled(false);
     // console.log(formDataFilled);
@@ -174,7 +176,7 @@ function CreateTrip() {
           {loading?
           <div>
             {formDataFilled?'Generate Trip'
-            :<div><AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' />
+            :<div><AiOutlineLoading3Quarters className='h-7 w-7 animate-spin' />Please wait
             </div>}
           </div>
           :'Generate Trip'}

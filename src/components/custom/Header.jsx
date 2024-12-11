@@ -57,19 +57,19 @@ function Header() {
               <Button variant="outline" className='rounded-full text-black ml-5 md:ml-0'>+ Create Trip</Button>
               </a>
               <a href="/my-trips">
-              <Button variant="outline" className='rounded-full text-black ml-5 md:ml-0 mt-3 md:mt-0'>My Trips</Button>
+              <Button variant="outline" className='rounded-full text-black ml-5 md:ml-2 mt-3 md:mt-0'>My Trips</Button>
               </a>
             </div>
             <Popover className='h-[20px]'>
               <PopoverTrigger>
-                <img src={users?.picture} className='h-auto w-auto md:h-[35px] md:w-[35px] rounded-full bg-white'></img>
+                <img src={users?.picture} className='h-[30px] w-[70px] md:h-[25px] md:w-[25px] rounded-full bg-white'></img>
               </PopoverTrigger>
               <PopoverContent>
                 <a href='/'>
                 <h2  className='cursor-pointer text-black'onClick={()=>{
                   googleLogout();
                   localStorage.clear();
-                  // window.location.reload();
+                  window.location.reload();
                 }}>Logout</h2>
                 </a>
               </PopoverContent>
